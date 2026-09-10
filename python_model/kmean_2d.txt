@@ -1,0 +1,166 @@
+Purpose of the Code
+
+This script implements the K-Means clustering algorithm (2D) to:
+
+Group data points into clusters
+Compute centroids iteratively
+Serve as a reference model for hardware implementation
+ 2. Code Structure Overview
+kmeans_2d.py
+│
+├── import libraries
+├── kmeans() function
+│     ├── cluster assignment
+│     ├── centroid update
+│     └── iteration loop
+│
+└── main execution block
+      ├── dataset definition
+      ├── centroid initialization
+      └── function call
+ 
+ 3. Library Used
+import numpy as np
+✔ Purpose:
+Efficient numerical computation
+Vector operations
+Distance calculation
+ 4. Function Definition
+def kmeans(points, centroids, iterations=3):
+🔹 Parameters:
+Parameter	Description
+points	Input dataset (2D points)
+centroids	Initial cluster centers
+iterations	Number of iterations
+ 5. Iteration Loop
+for iteration in range(iterations):
+✔ Purpose:
+Repeat clustering process
+Refine centroids over time
+ 6. Cluster Initialization
+clusters = [[] for _ in range(K)]
+✔ What it does:
+Creates empty lists for each cluster
+K = number of centroids
+ 7. Cluster Assignment Logic
+for p in points:
+    distances = [np.sum((p - c) ** 2) for c in centroids]
+    cluster_id = np.argmin(distances)
+    clusters[cluster_id].append(p)
+ Step-by-step explanation
+🔹 1. Loop through each point
+p = current data point
+🔹 2. Compute distance to each centroid
+(p - c) ** 2
+
+ This calculates:
+
+(x−cx)
+2
++(y−cy)
+2
+🔹 3. Store all distances
+[d0, d1]
+🔹 4. Find minimum distance
+cluster_id = np.argmin(distances)
+
+ Returns index of smallest value
+ That index = cluster number
+
+🔹 5. Assign point to cluster
+clusters[cluster_id].append(p)
+ 8. Printing Cluster Output
+print(f"Cluster {i}: {cluster}")
+✔ Purpose:
+Debugging
+Visualization of grouping
+ 9. Centroid Update Logic
+for i in range(K):
+    if len(clusters[i]) > 0:
+        centroids[i] = np.mean(clusters[i], axis=0)
+ Step-by-step explanation
+🔹 1. Loop through each cluster
+i = cluster index
+🔹 2. Check if cluster is not empty
+if len(clusters[i]) > 0:
+
+ Avoid division by zero
+
+🔹 3. Compute mean
+np.mean(clusters[i], axis=0)
+
+
+ 4. Update centroid
+centroids[i] = new value
+ 10. Return Statement
+return centroids, clusters
+✔ Output:
+Final centroids
+Final cluster grouping
+ 11. Main Execution Block
+if __name__ == "__main__":
+ Purpose:
+Runs code only when file is executed directly
+🔹 Dataset Definition
+points = np.array([...])
+🔹 Initial Centroids
+centroids = np.array([...])
+🔹 Function Call
+final_centroids, clusters = kmeans(points, centroids, iterations=5)
+🔹 Final Output
+print("\nFinal Centroids:", final_centroids)
+ 12. Execution Flow Summary
+Start
+  ↓
+Load dataset
+  ↓
+Initialize centroids
+  ↓
+Repeat:
+   For each point:
+      Compute distance
+      Assign cluster
+   Update centroids
+  ↓
+Return result
+  ↓
+End
+
+The code iteratively assigns each data point to the nearest centroid using Euclidean distance, 
+then updates the centroid as the mean of assigned points. This process repeats until clusters stabilize.
+
+In this project, initial centroids are manually selected from the dataset to ensure 
+deterministic behavior and simplify hardware validation.
+
+What is K?
+
+K = number of clusters to be formed
+
+How K is selected
+
+K is chosen based on:
+
+Nature of data
+Expected grouping
+Application requirement
+ Why we chose K = 2
+
+Looking at your dataset:
+
+(2,3), (3,4), (4,3)      → Group 1  
+(10,10), (11,12), (9,11) → Group 2
+
+ Clearly two natural groups exist
+
+ Interpretation
+Small values → Cluster 0
+Large values → Cluster 1
+
+ So K = 2 is logical and optimal
+ Other ways to select K (theoretical)
+ Elbow Method
+Plot error vs K
+Choose optimal point
+Domain Knowledge
+Based on problem understandingFixed (Used in your project) ✅
+Predefined for simplicity
